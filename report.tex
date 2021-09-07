@@ -75,7 +75,9 @@
 \tableofcontents
 
 \ifsoldraft
-\chapter*{To edit this document}
+\chapter{Only for Auditors}
+
+\section{To edit this documents}
 
 In the report.tex file, choose:
 \begin{itemize}
@@ -92,6 +94,23 @@ Issues can be entered with:
 \item{\bf \textbackslash{}issueMinor\{title\}\{text\}}
 \end{itemize}
 \fi
+
+\section{General Auditing Rules}
+
+\begin{itemize}
+\item Check that types have the correct integer types (Pubkey : uint256, \
+   Amount: uint128, Time: uint64 ).
+\item Naming conventions: constants should for example be all uppercase, static variables should start with a prefix like \verb+s_+, globals should start with a prefix like \verb+g_+ or \verb+m_+, internal functions should start with a prefix \verb+_+.
+\item Numbers should not appear in source, but be defined as constants.
+\item In constant definitions, verify that 2 consecutive errors have not the same error (common copy-paste error)
+\item Constants for amounts should be expressed in \verb+ton+ to prevent too many zeroes.
+\item Modifiers with {\tt tvm.accept} must always check the source of the message
+\item Constructors with arguments must always check the source of the message to prevent anybody from calling the constructor and set variables instead of the real owner
+\item Failures should never happen after {\tt tvm.accept} (such as {\tt require}, division by zero, overflows, etc.)
+\item Most arguments should be protected by a {\tt require}
+\item Before sending a message, the function should check that it has enough gas (to prevent a partial failure during the message sending phase)
+\item {\tt tvm.accept} should only be called after verifying that the sender of the message if the contracts' owner
+\end{itemize}
 
 \chapter{Introduction}
 \input{introduction.tex}
