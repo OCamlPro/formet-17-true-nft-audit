@@ -1,0 +1,94 @@
+
+\chapter{Contract Manager}
+
+\minitoc
+
+\section{Overview}
+
+
+In file {\tt Manager.sol}
+
+\section{Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+TvmCell & \_{}rootCode &  \\\hline
+ & & used in @1.Manager.\_{}buildNftRootState\\\hline
+ & & assigned in @1.Manager.:constructor\\\hline
+ & & used in @1.Manager.:constructor\\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=13]
+    TvmCell _rootCode;
+\end{lstlisting}
+
+\section{Constructor Definitions}
+
+
+\subsection{Constructor}
+
+\issueCritical{Constructor for Manager (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+
+loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+loren ipsum loren ipsum loren ipsum }
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=15]
+    constructor (TvmCell rootCode) public {
+        tvm.accept();
+        _rootCode = rootCode;
+    }
+\end{lstlisting}
+
+\section{Public Method Definitions}
+
+
+\subsection{Function deployRoot}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=20]
+    function deployRoot(
+        address addrOwner,
+        TvmCell codeIndex,
+        TvmCell codeData,
+        string name,
+        string description,
+        string tokenCode,
+        uint256 totalSupply,
+        uint128 index,
+        bytes part
+    ) public view {
+        tvm.accept();
+
+        TvmCell stateNftRoot = _buildNftRootState(addrOwner);
+        new NftRoot {stateInit: stateNftRoot, value: Constants.DEPLOY_INDEX_FEE}( codeIndex, codeData, name, description, tokenCode, totalSupply, index, part);
+    }
+\end{lstlisting}
+
+\section{Internal Method Definitions}
+
+
+\subsection{Function \_{}buildNftRootState}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=37]
+    function _buildNftRootState( address addrOwner) internal virtual view returns (TvmCell) {
+        TvmCell code = _rootCode.toSlice().loadRef();
+        return tvm.buildStateInit({
+            contr: NftRoot,
+            varInit: {_addrOwner: addrOwner},
+            code: code
+        });
+    }
+\end{lstlisting}

@@ -1,0 +1,106 @@
+
+\chapter{Contract IndexResolver}
+
+\minitoc
+
+\section{Overview}
+
+
+In file {\tt IndexResolver.sol}
+
+\section{Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+TvmCell & \_{}codeIndex &  \\\hline
+ & & used in @2.NftRoot.mintNft\\\hline
+ & & assigned in @2.NftRoot.:constructor\\\hline
+ & & used in @2.NftRoot.:constructor\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+ & & used in @8.IndexResolver.\_{}buildIndexCode\\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=11]
+    TvmCell _codeIndex;
+\end{lstlisting}
+
+\section{Public Method Definitions}
+
+
+\subsection{Function resolveCodeHashIndex}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=13]
+    function resolveCodeHashIndex(
+        address addrRoot,
+        address addrOwner
+    ) public view returns (uint256 codeHashIndex) {
+        return tvm.hash(_buildIndexCode(addrRoot, addrOwner));
+    }
+\end{lstlisting}
+
+\subsection{Function resolveIndex}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=20]
+    function resolveIndex(
+        address addrRoot,
+        address addrData,
+        address addrOwner
+    ) public view returns (address addrIndex) {
+        TvmCell code = _buildIndexCode(addrRoot, addrOwner);
+        TvmCell state = _buildIndexState(code, addrData);
+        uint256 hashState = tvm.hash(state);
+        addrIndex = address.makeAddrStd(0, hashState);
+    }
+\end{lstlisting}
+
+\section{Internal Method Definitions}
+
+
+\subsection{Function \_{}buildIndexCode}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=31]
+    function _buildIndexCode(
+        address addrRoot,
+        address addrOwner
+    ) internal virtual view returns (TvmCell) {
+        TvmBuilder salt;
+        salt.store(addrRoot);
+        salt.store(addrOwner);
+        return tvm.setCodeSalt(_codeIndex, salt.toCell());
+    }
+\end{lstlisting}
+
+\subsection{Function \_{}buildIndexState}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=41]
+    function _buildIndexState(
+        TvmCell code,
+        address addrData
+    ) internal virtual pure returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: Index,
+            varInit: {_addrData: addrData},
+            code: code
+        });
+    }
+\end{lstlisting}

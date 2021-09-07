@@ -1,0 +1,257 @@
+
+\chapter{Contract Data}
+
+\minitoc
+
+\section{Overview}
+
+
+In file {\tt Data.sol}
+
+\section{Contract Inheritance}
+
+
+\noindent\begin{tabular}{|l|p{5cm}|}\hline
+IData & \\\hline
+IndexResolver & \\\hline
+\end{tabular}
+
+
+\section{Static Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+uint256 & \_{}id &  \\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=17]
+    uint256 static _id;
+\end{lstlisting}
+
+\section{Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+address & \_{}addrRoot &  \\\hline
+ & & used in @9.Data.destruct\\\hline
+ & & used in @9.Data.destruct\\\hline
+ & & used in @9.Data.deployIndex\\\hline
+ & & used in @9.Data.deployIndex\\\hline
+ & & used in @9.Data.deployIndex\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+address & \_{}addrOwner &  \\\hline
+ & & used in @9.Data.getOwner\\\hline
+ & & used in @9.Data.destruct\\\hline
+ & & used in @9.Data.destruct\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+address & \_{}addrAuthor &  \\\hline
+ & & used in @9.Data.getInfo\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+string & \_{}name &  \\\hline
+ & & used in @9.Data.getInfo\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+string & \_{}description &  \\\hline
+ & & used in @9.Data.getInfo\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+string & \_{}tokenCode &  \\\hline
+ & & used in @9.Data.getInfo\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+uint64 & \_{}creationDate &  \\\hline
+ & & used in @9.Data.getInfo\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+string & \_{}comment &  \\\hline
+ & & used in @9.Data.getInfo\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+mapping (uint128 =$>$ bytes) & \_{}content &  \\\hline
+ & & used in @9.Data.getInfo\\\hline
+ & & assigned in @9.Data.:constructor\\\hline
+ & & used in @9.Data.:constructor\\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=14]
+    address _addrRoot;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=15]
+    address _addrOwner;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=16]
+    address _addrAuthor;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=19]
+    string _name;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=20]
+    string _description;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=21]
+    string _tokenCode;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=22]
+    uint64 _creationDate;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=23]
+    string _comment;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=26]
+    mapping(uint128 => bytes) _content;
+\end{lstlisting}
+
+\section{Constructor Definitions}
+
+
+\subsection{Constructor}
+
+\issueCritical{Constructor for Data (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+
+loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+loren ipsum loren ipsum loren ipsum }
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=28]
+    constructor(
+        address addrOwner,
+        TvmCell codeIndex,
+        address addrAuthor,
+        string name,
+        string description,
+        string tokenCode,
+        uint64 creationDate,
+        string comment,
+        uint128 index,
+        bytes part
+    ) public {
+        optional(TvmCell) optSalt = tvm.codeSalt(tvm.code());
+        require(optSalt.hasValue(), Errors.ERROR_EMPTY_SALT);
+        (address addrRoot) = optSalt
+            .get()
+            .toSlice()
+            .decode(address);
+        require(msg.sender == addrRoot, Errors.ERROR_MESSAGE_SENDER_IS_NOT_ROOT);
+        require(msg.value >= Constants.MIN_FOR_DEPLOY);
+        _addrRoot = addrRoot;
+        _addrOwner = addrOwner;
+        _addrAuthor = addrAuthor;
+        _name = name;
+        _description = description;
+        _tokenCode = tokenCode;
+        _creationDate = creationDate;
+        _comment = comment;
+        _codeIndex = codeIndex;
+
+        _content[index] = part;
+
+        deployIndex(addrOwner);
+    }
+\end{lstlisting}
+
+\section{Public Method Definitions}
+
+
+\subsection{Function destruct}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=77]
+    function destruct(address recipient) public {
+        require(msg.sender == _addrRoot, Errors.ERROR_MESSAGE_SENDER_IS_NOT_ROOT);
+
+        address oldIndexOwner = resolveIndex(address(0), address(this), _addrOwner);
+        IIndex(oldIndexOwner).destruct();
+        address oldIndexOwnerRoot = resolveIndex(_addrRoot, address(this), _addrOwner);
+        IIndex(oldIndexOwnerRoot).destruct();
+
+        recipient.transfer(0, false, 64);
+        selfdestruct(recipient);
+    }
+\end{lstlisting}
+
+\subsection{Function getInfo}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=94]
+    function getInfo() public view override
+    returns(
+        mapping(uint128 => bytes) content,
+        address author,
+        string name,
+        string description,
+        string tokenCode,
+        uint64 creationDate,
+        string comment
+    ) {
+        content = _content;
+        author = _addrAuthor;
+        name = _name;
+        description = _description;
+        tokenCode = _tokenCode;
+        creationDate = _creationDate;
+        comment = _comment;
+    }
+\end{lstlisting}
+
+\subsection{Function getOwner}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=89]
+    function getOwner() public view override returns(address addrOwner, address addrNftData) {
+        addrOwner = _addrOwner;
+        addrNftData = address(this);
+    }
+\end{lstlisting}
+
+\section{Internal Method Definitions}
+
+
+\subsection{Function deployIndex}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=63]
+    function deployIndex(address owner) private {
+        TvmCell codeIndexOwner = _buildIndexCode(address(0), owner);
+        TvmCell stateIndexOwner = _buildIndexState(codeIndexOwner, address(this));
+        new Index
+            {stateInit: stateIndexOwner, value: Constants.DEPLOY_INDEX_FEE, flag: 0}
+            (_addrRoot);
+
+        TvmCell codeIndexOwnerRoot = _buildIndexCode(_addrRoot, owner);
+        TvmCell stateIndexOwnerRoot = _buildIndexState(codeIndexOwnerRoot, address(this));
+        new Index
+            {stateInit: stateIndexOwnerRoot, value: Constants.DEPLOY_INDEX_FEE, flag: 0}
+            (_addrRoot);
+    }
+\end{lstlisting}

@@ -1,0 +1,8 @@
+*.aux
+*.log
+*.lof
+*.maf
+*.mtc*
+*~
+*.out
+*.toc

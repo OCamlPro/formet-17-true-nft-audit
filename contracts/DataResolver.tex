@@ -1,0 +1,95 @@
+
+\chapter{Contract DataResolver}
+
+\minitoc
+
+\section{Overview}
+
+
+In file {\tt DataResolver.sol}
+
+\section{Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+TvmCell & \_{}codeData &  \\\hline
+ & & assigned in @2.NftRoot.:constructor\\\hline
+ & & used in @2.NftRoot.:constructor\\\hline
+ & & used in @7.DataResolver.\_{}buildDataCode\\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=11]
+    TvmCell _codeData;
+\end{lstlisting}
+
+\section{Public Method Definitions}
+
+
+\subsection{Function resolveCodeHashData}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=13]
+    function resolveCodeHashData() public view returns (uint256 codeHashData) {
+        return tvm.hash(_buildDataCode(address(this)));
+    }
+\end{lstlisting}
+
+\subsection{Function resolveData}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=17]
+    function resolveData(
+        address addrRoot,
+        uint256 id
+    ) public view returns (address addrData) {
+        TvmCell code = _buildDataCode(addrRoot);
+        TvmCell state = _buildDataState(code, id);
+        uint256 hashState = tvm.hash(state);
+        addrData = address.makeAddrStd(0, hashState);
+    }
+\end{lstlisting}
+
+\section{Internal Method Definitions}
+
+
+\subsection{Function \_{}buildDataCode}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=27]
+    function _buildDataCode(address addrRoot) internal virtual view returns (TvmCell) {
+        TvmBuilder salt;
+        salt.store(addrRoot);
+        return tvm.setCodeSalt(_codeData, salt.toCell());
+    }
+\end{lstlisting}
+
+\subsection{Function \_{}buildDataState}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=33]
+    function _buildDataState(
+        TvmCell code,
+        uint256 id
+    ) internal virtual pure returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: Data,
+            varInit: {_id: id},
+            code: code
+        });
+    }
+\end{lstlisting}

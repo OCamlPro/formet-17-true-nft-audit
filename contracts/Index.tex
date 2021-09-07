@@ -1,0 +1,127 @@
+
+\chapter{Contract Index}
+
+\minitoc
+
+\section{Overview}
+
+
+In file {\tt Index.sol}
+
+\section{Contract Inheritance}
+
+
+\noindent\begin{tabular}{|l|p{5cm}|}\hline
+IIndex & \\\hline
+\end{tabular}
+
+
+\section{Static Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+address & \_{}addrData &  \\\hline
+ & & used in @10.Index.getInfo\\\hline
+ & & used in @10.Index.destruct\\\hline
+ & & used in @10.Index.destruct\\\hline
+ & & used in @10.Index.:constructor\\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=13]
+    address static _addrData;
+\end{lstlisting}
+
+\section{Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+address & \_{}addrRoot &  \\\hline
+ & & used in @10.Index.getInfo\\\hline
+ & & assigned in @10.Index.:constructor\\\hline
+ & & used in @10.Index.:constructor\\\hline
+ & & assigned in @10.Index.:constructor\\\hline
+ & & used in @10.Index.:constructor\\\hline
+address & \_{}addrOwner &  \\\hline
+ & & used in @10.Index.getInfo\\\hline
+ & & assigned in @10.Index.:constructor\\\hline
+ & & used in @10.Index.:constructor\\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=11]
+    address _addrRoot;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=12]
+    address _addrOwner;
+\end{lstlisting}
+
+\section{Constructor Definitions}
+
+
+\subsection{Constructor}
+
+\issueCritical{Constructor for Index (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+
+loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+loren ipsum loren ipsum loren ipsum }
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=15]
+    constructor(address root) public {
+        optional(TvmCell) optSalt = tvm.codeSalt(tvm.code());
+        require(optSalt.hasValue(), Errors.ERROR_EMPTY_SALT);
+        (address addrRoot, address addrOwner) = optSalt
+            .get()
+            .toSlice()
+            .decode(address, address);
+        require(msg.sender == _addrData, Errors.ERROR_MESSAGE_SENDER_IS_NOT_OWNER);
+        tvm.accept();
+        _addrRoot = addrRoot;
+        _addrOwner = addrOwner;
+        if(addrRoot == address(0)) {
+            _addrRoot = root;
+        }
+    }
+\end{lstlisting}
+
+\section{Public Method Definitions}
+
+
+\subsection{Function destruct}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=41]
+    function destruct() public override {
+        require(msg.sender == _addrData, Errors.ERROR_MESSAGE_SENDER_IS_NOT_OWNER);
+        selfdestruct(_addrData);
+    }
+\end{lstlisting}
+
+\subsection{Function getInfo}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=31]
+    function getInfo() public view override returns (
+        address addrRoot,
+        address addrOwner,
+        address addrData
+    ) {
+        addrRoot = _addrRoot;
+        addrOwner = _addrOwner;
+        addrData = _addrData;
+    }
+\end{lstlisting}

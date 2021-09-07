@@ -1,0 +1,90 @@
+
+\chapter{Contract IndexBasis}
+
+\minitoc
+
+\section{Overview}
+
+
+In file {\tt IndexBasis.sol}
+
+\section{Static Variable Definitions}
+
+
+\ifsoltables
+\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
+address & \_{}addrRoot &  \\\hline
+ & & used in @5.IndexBasis.getInfo\\\hline
+ & & used in @5.IndexBasis.destruct\\\hline
+uint256 & \_{}codeHashData &  \\\hline
+ & & used in @5.IndexBasis.getInfo\\\hline
+\end{tabular}
+\fi
+
+
+\begin{lstlisting}[firstnumber=9]
+    address static _addrRoot;
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=10]
+    uint256 static _codeHashData;
+\end{lstlisting}
+
+\section{Modifier Definitions}
+
+
+\subsection{Modifier onlyRoot}
+
+
+\begin{lstlisting}[firstnumber=12]
+    modifier onlyRoot() {
+        require(msg.sender == _addrRoot, Errors.ERROR_MESSAGE_SENDER_IS_NOT_ROOT);
+        tvm.accept();
+        _;
+    }
+\end{lstlisting}
+
+\section{Constructor Definitions}
+
+
+\subsection{Constructor}
+
+\issueCritical{Constructor for IndexBasis (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+
+loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+loren ipsum loren ipsum loren ipsum }
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=18]
+    constructor() public onlyRoot {}
+\end{lstlisting}
+
+\section{Public Method Definitions}
+
+
+\subsection{Function destruct}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=25]
+    function destruct() public onlyRoot {
+        selfdestruct(_addrRoot);
+    }
+\end{lstlisting}
+
+\subsection{Function getInfo}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=20]
+    function getInfo() public view returns (address addrRoot, uint256 codeHashData) {
+        addrRoot = _addrRoot;
+        codeHashData = _codeHashData;
+    }
+\end{lstlisting}
