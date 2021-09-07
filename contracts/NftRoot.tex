@@ -17,114 +17,29 @@ IndexResolver & \\\hline
 \end{tabular}
 
 
-\section{Static Variable Definitions}
-
-
-\ifsoltables
-\noindent\begin{tabular}{|l|l|p{5cm}|}\hline
-address & \_{}addrOwner &  \\\hline
-\end{tabular}
-\fi
-
-
-\begin{lstlisting}[firstnumber=32]
-    address static _addrOwner;
-\end{lstlisting}
-
 \section{Variable Definitions}
 
 
 \ifsoltables
 \noindent\begin{tabular}{|l|l|p{5cm}|}\hline
 uint256 & \_{}totalMinted &  \\\hline
- & & assigned in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.mintNft\\\hline
+ & & assigned in @1.NftRoot.mintNft\\\hline
+ & & used in @1.NftRoot.mintNft\\\hline
+ & & used in @1.NftRoot.mintNft\\\hline
 address & \_{}addrBasis &  \\\hline
- & & used in @2.NftRoot.destructBasis\\\hline
- & & assigned in @2.NftRoot.deployBasis\\\hline
- & & used in @2.NftRoot.deployBasis\\\hline
-uint256 & \_{}totalSupply &  \\\hline
- & & used in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.getInfo\\\hline
- & & assigned in @2.NftRoot.:constructor\\\hline
- & & used in @2.NftRoot.:constructor\\\hline
-string & \_{}name &  \\\hline
- & & used in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.getInfo\\\hline
- & & assigned in @2.NftRoot.:constructor\\\hline
- & & used in @2.NftRoot.:constructor\\\hline
-string & \_{}description &  \\\hline
- & & used in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.getInfo\\\hline
- & & assigned in @2.NftRoot.:constructor\\\hline
- & & used in @2.NftRoot.:constructor\\\hline
-string & \_{}tokenCode &  \\\hline
- & & used in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.getInfo\\\hline
- & & assigned in @2.NftRoot.:constructor\\\hline
- & & used in @2.NftRoot.:constructor\\\hline
-mapping (uint128 =$>$ bytes) & \_{}content &  \\\hline
- & & used in @2.NftRoot.mintNft\\\hline
- & & used in @2.NftRoot.getInfo\\\hline
- & & assigned in @2.NftRoot.:constructor\\\hline
- & & used in @2.NftRoot.:constructor\\\hline
-uint128 & \_{}price &  \\\hline
- & & assigned in @2.NftRoot.setPrice\\\hline
- & & used in @2.NftRoot.setPrice\\\hline
- & & used in @2.NftRoot.getInfo\\\hline
- & & used in @2.NftRoot.burn\\\hline
- & & assigned in @2.NftRoot.:constructor\\\hline
- & & used in @2.NftRoot.:constructor\\\hline
+ & & used in @1.NftRoot.destructBasis\\\hline
+ & & assigned in @1.NftRoot.deployBasis\\\hline
+ & & used in @1.NftRoot.deployBasis\\\hline
 \end{tabular}
 \fi
 
 
-\begin{lstlisting}[firstnumber=18]
+\begin{lstlisting}[firstnumber=16]
     uint256 _totalMinted;
 \end{lstlisting}
 
-\begin{lstlisting}[firstnumber=19]
+\begin{lstlisting}[firstnumber=17]
     address _addrBasis;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=21]
-    uint256 _totalSupply;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=23]
-    string _name;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=24]
-    string _description;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=25]
-    string _tokenCode;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=28]
-    mapping(uint128 => bytes) _content;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=30]
-    uint128 _price;
-\end{lstlisting}
-
-\section{Modifier Definitions}
-
-
-\subsection{Modifier onlyOwner}
-
-
-\begin{lstlisting}[firstnumber=34]
-    modifier onlyOwner() {
-        require(msg.sender == _addrOwner, Errors.ERROR_MESSAGE_SENDER_IS_NOT_OWNER);
-        tvm.accept();
-        _;
-    }
 \end{lstlisting}
 
 \section{Constructor Definitions}
@@ -140,49 +55,16 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=40]
-    constructor(
-        TvmCell codeIndex,
-        TvmCell codeData,
-        string name,
-        string description,
-        string tokenCode,
-        uint256 totalSupply,
-        uint128 index,
-        bytes part
-    ) public {
+\begin{lstlisting}[firstnumber=19]
+    constructor(TvmCell codeIndex, TvmCell codeData) public {
         tvm.accept();
         _codeIndex = codeIndex;
         _codeData = codeData;
-        _name = name;
-        _description = description;
-        _tokenCode = tokenCode;
-        _totalSupply = totalSupply;
-
-        _content[index] = part;
-        
-        _price = 1 ton;
     }
 \end{lstlisting}
 
 \section{Public Method Definitions}
 
-
-\subsection{Function burn}
-
-\begin{itemize}
-\item TODO
-\end{itemize}
-
-\begin{lstlisting}[firstnumber=123]
-    function burn(address dataAddress, address owner) public onlyOwner {
-        require(msg.value >= (_price), Errors.ERROR_MSG_VALUE_LESS_THAN_PRICE);
-
-        Data(dataAddress).destruct
-            {value: msg.value, flag: 3, bounce: true}
-            (owner);
-    }
-\end{lstlisting}
 
 \subsection{Function deployBasis}
 
@@ -190,9 +72,9 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=85]
-    function deployBasis(TvmCell codeIndexBasis) public onlyOwner {
-        require(msg.value > 0.5 ton, Errors.ERROR_NOT_ENOUGH_GRAMS);
+\begin{lstlisting}[firstnumber=33]
+    function deployBasis(TvmCell codeIndexBasis) public {
+        require(msg.value > 0.5 ton, 104);
         uint256 codeHasData = resolveCodeHashData();
         TvmCell state = tvm.buildStateInit({
             contr: IndexBasis,
@@ -212,33 +94,9 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=99]
-    function destructBasis() public view onlyOwner {
+\begin{lstlisting}[firstnumber=47]
+    function destructBasis() public view {
         IIndexBasis(_addrBasis).destruct();
-    }
-\end{lstlisting}
-
-\subsection{Function getInfo}
-
-\begin{itemize}
-\item TODO
-\end{itemize}
-
-\begin{lstlisting}[firstnumber=103]
-    function getInfo() public view returns (
-        mapping(uint128 => bytes) content,
-        string name,
-        string description,
-        string tokenCode,
-        uint256 totalSupply,
-        uint128 price
-    ) {
-        content = _content;
-        name = _name;
-        description = _description;
-        tokenCode = _tokenCode;
-        totalSupply = _totalSupply;
-        price = _price;
     }
 \end{lstlisting}
 
@@ -248,38 +106,12 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=63]
-    function mintNft(uint64 creationDate, string comment, address owner) public onlyOwner {
-        require(msg.value >= 1.6 ton, Errors.ERROR_NOT_ENOUGH_GRAMS);
-        require(_totalMinted <= _totalSupply, Errors.ERROR_MINTED_TOO_MUCH);
+\begin{lstlisting}[firstnumber=25]
+    function mintNft() public {
         TvmCell codeData = _buildDataCode(address(this));
         TvmCell stateData = _buildDataState(codeData, _totalMinted);
-        new Data
-            {stateInit: stateData, value: 1.5 ton} (
-                owner,
-                _codeIndex,
-                msg.sender,
-                _name,
-                _description,
-                _tokenCode,
-                creationDate,
-                comment,
-                0,
-                _content[0]
-            );
+        new Data{stateInit: stateData, value: 1.1 ton}(msg.sender, _codeIndex);
 
         _totalMinted++;
-    }
-\end{lstlisting}
-
-\subsection{Function setPrice}
-
-\begin{itemize}
-\item TODO
-\end{itemize}
-
-\begin{lstlisting}[firstnumber=119]
-    function setPrice(uint128 price) public onlyOwner {
-        _price = price;
     }
 \end{lstlisting}

@@ -14,19 +14,19 @@ In file {\tt IndexBasis.sol}
 \ifsoltables
 \noindent\begin{tabular}{|l|l|p{5cm}|}\hline
 address & \_{}addrRoot &  \\\hline
- & & used in @5.IndexBasis.getInfo\\\hline
- & & used in @5.IndexBasis.destruct\\\hline
+ & & used in @2.IndexBasis.getInfo\\\hline
+ & & used in @2.IndexBasis.destruct\\\hline
 uint256 & \_{}codeHashData &  \\\hline
- & & used in @5.IndexBasis.getInfo\\\hline
+ & & used in @2.IndexBasis.getInfo\\\hline
 \end{tabular}
 \fi
 
 
-\begin{lstlisting}[firstnumber=9]
+\begin{lstlisting}[firstnumber=7]
     address static _addrRoot;
 \end{lstlisting}
 
-\begin{lstlisting}[firstnumber=10]
+\begin{lstlisting}[firstnumber=8]
     uint256 static _codeHashData;
 \end{lstlisting}
 
@@ -36,9 +36,9 @@ uint256 & \_{}codeHashData &  \\\hline
 \subsection{Modifier onlyRoot}
 
 
-\begin{lstlisting}[firstnumber=12]
+\begin{lstlisting}[firstnumber=10]
     modifier onlyRoot() {
-        require(msg.sender == _addrRoot, Errors.ERROR_MESSAGE_SENDER_IS_NOT_ROOT);
+        require(msg.sender == _addrRoot, 100);
         tvm.accept();
         _;
     }
@@ -57,7 +57,7 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=18]
+\begin{lstlisting}[firstnumber=16]
     constructor() public onlyRoot {}
 \end{lstlisting}
 
@@ -70,7 +70,7 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=25]
+\begin{lstlisting}[firstnumber=23]
     function destruct() public onlyRoot {
         selfdestruct(_addrRoot);
     }
@@ -82,7 +82,7 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=20]
+\begin{lstlisting}[firstnumber=18]
     function getInfo() public view returns (address addrRoot, uint256 codeHashData) {
         addrRoot = _addrRoot;
         codeHashData = _codeHashData;

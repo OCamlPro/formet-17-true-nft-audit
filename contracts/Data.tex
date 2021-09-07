@@ -27,7 +27,7 @@ uint256 & \_{}id &  \\\hline
 \fi
 
 
-\begin{lstlisting}[firstnumber=17]
+\begin{lstlisting}[firstnumber=18]
     uint256 static _id;
 \end{lstlisting}
 
@@ -37,47 +37,26 @@ uint256 & \_{}id &  \\\hline
 \ifsoltables
 \noindent\begin{tabular}{|l|l|p{5cm}|}\hline
 address & \_{}addrRoot &  \\\hline
- & & used in @9.Data.destruct\\\hline
- & & used in @9.Data.destruct\\\hline
- & & used in @9.Data.deployIndex\\\hline
- & & used in @9.Data.deployIndex\\\hline
- & & used in @9.Data.deployIndex\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
+ & & used in @7.Data.transferOwnership\\\hline
+ & & used in @7.Data.getInfo\\\hline
+ & & used in @7.Data.deployIndex\\\hline
+ & & used in @7.Data.deployIndex\\\hline
+ & & used in @7.Data.deployIndex\\\hline
+ & & assigned in @7.Data.:constructor\\\hline
+ & & used in @7.Data.:constructor\\\hline
 address & \_{}addrOwner &  \\\hline
- & & used in @9.Data.getOwner\\\hline
- & & used in @9.Data.destruct\\\hline
- & & used in @9.Data.destruct\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
+ & & assigned in @7.Data.transferOwnership\\\hline
+ & & used in @7.Data.transferOwnership\\\hline
+ & & used in @7.Data.transferOwnership\\\hline
+ & & used in @7.Data.transferOwnership\\\hline
+ & & used in @7.Data.transferOwnership\\\hline
+ & & used in @7.Data.getOwner\\\hline
+ & & used in @7.Data.getInfo\\\hline
+ & & assigned in @7.Data.:constructor\\\hline
+ & & used in @7.Data.:constructor\\\hline
 address & \_{}addrAuthor &  \\\hline
- & & used in @9.Data.getInfo\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
-string & \_{}name &  \\\hline
- & & used in @9.Data.getInfo\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
-string & \_{}description &  \\\hline
- & & used in @9.Data.getInfo\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
-string & \_{}tokenCode &  \\\hline
- & & used in @9.Data.getInfo\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
-uint64 & \_{}creationDate &  \\\hline
- & & used in @9.Data.getInfo\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
-string & \_{}comment &  \\\hline
- & & used in @9.Data.getInfo\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
-mapping (uint128 =$>$ bytes) & \_{}content &  \\\hline
- & & used in @9.Data.getInfo\\\hline
- & & assigned in @9.Data.:constructor\\\hline
- & & used in @9.Data.:constructor\\\hline
+ & & assigned in @7.Data.:constructor\\\hline
+ & & used in @7.Data.:constructor\\\hline
 \end{tabular}
 \fi
 
@@ -94,30 +73,6 @@ mapping (uint128 =$>$ bytes) & \_{}content &  \\\hline
     address _addrAuthor;
 \end{lstlisting}
 
-\begin{lstlisting}[firstnumber=19]
-    string _name;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=20]
-    string _description;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=21]
-    string _tokenCode;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=22]
-    uint64 _creationDate;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=23]
-    string _comment;
-\end{lstlisting}
-
-\begin{lstlisting}[firstnumber=26]
-    mapping(uint128 => bytes) _content;
-\end{lstlisting}
-
 \section{Constructor Definitions}
 
 
@@ -131,38 +86,18 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=28]
-    constructor(
-        address addrOwner,
-        TvmCell codeIndex,
-        address addrAuthor,
-        string name,
-        string description,
-        string tokenCode,
-        uint64 creationDate,
-        string comment,
-        uint128 index,
-        bytes part
-    ) public {
+\begin{lstlisting}[firstnumber=20]
+    constructor(address addrOwner, TvmCell codeIndex) public {
         optional(TvmCell) optSalt = tvm.codeSalt(tvm.code());
-        require(optSalt.hasValue(), Errors.ERROR_EMPTY_SALT);
-        (address addrRoot) = optSalt
-            .get()
-            .toSlice()
-            .decode(address);
-        require(msg.sender == addrRoot, Errors.ERROR_MESSAGE_SENDER_IS_NOT_ROOT);
+        require(optSalt.hasValue(), 101);
+        (address addrRoot) = optSalt.get().toSlice().decode(address);
+        require(msg.sender == addrRoot);
         require(msg.value >= Constants.MIN_FOR_DEPLOY);
+        tvm.accept();
         _addrRoot = addrRoot;
         _addrOwner = addrOwner;
-        _addrAuthor = addrAuthor;
-        _name = name;
-        _description = description;
-        _tokenCode = tokenCode;
-        _creationDate = creationDate;
-        _comment = comment;
+        _addrAuthor = addrOwner;
         _codeIndex = codeIndex;
-
-        _content[index] = part;
 
         deployIndex(addrOwner);
     }
@@ -171,50 +106,21 @@ loren ipsum loren ipsum loren ipsum }
 \section{Public Method Definitions}
 
 
-\subsection{Function destruct}
-
-\begin{itemize}
-\item TODO
-\end{itemize}
-
-\begin{lstlisting}[firstnumber=77]
-    function destruct(address recipient) public {
-        require(msg.sender == _addrRoot, Errors.ERROR_MESSAGE_SENDER_IS_NOT_ROOT);
-
-        address oldIndexOwner = resolveIndex(address(0), address(this), _addrOwner);
-        IIndex(oldIndexOwner).destruct();
-        address oldIndexOwnerRoot = resolveIndex(_addrRoot, address(this), _addrOwner);
-        IIndex(oldIndexOwnerRoot).destruct();
-
-        recipient.transfer(0, false, 64);
-        selfdestruct(recipient);
-    }
-\end{lstlisting}
-
 \subsection{Function getInfo}
 
 \begin{itemize}
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=94]
-    function getInfo() public view override
-    returns(
-        mapping(uint128 => bytes) content,
-        address author,
-        string name,
-        string description,
-        string tokenCode,
-        uint64 creationDate,
-        string comment
+\begin{lstlisting}[firstnumber=59]
+    function getInfo() public view override returns (
+        address addrRoot,
+        address addrOwner,
+        address addrData
     ) {
-        content = _content;
-        author = _addrAuthor;
-        name = _name;
-        description = _description;
-        tokenCode = _tokenCode;
-        creationDate = _creationDate;
-        comment = _comment;
+        addrRoot = _addrRoot;
+        addrOwner = _addrOwner;
+        addrData = address(this);
     }
 \end{lstlisting}
 
@@ -224,10 +130,31 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=89]
-    function getOwner() public view override returns(address addrOwner, address addrNftData) {
+\begin{lstlisting}[firstnumber=69]
+    function getOwner() public view override returns(address addrOwner) {
         addrOwner = _addrOwner;
-        addrNftData = address(this);
+    }
+\end{lstlisting}
+
+\subsection{Function transferOwnership}
+
+\begin{itemize}
+\item TODO
+\end{itemize}
+
+\begin{lstlisting}[firstnumber=35]
+    function transferOwnership(address addrTo) public override {
+        require(msg.sender == _addrOwner);
+        require(msg.value >= Constants.MIN_FOR_DEPLOY);
+
+        address oldIndexOwner = resolveIndex(_addrRoot, address(this), _addrOwner);
+        IIndex(oldIndexOwner).destruct();
+        address oldIndexOwnerRoot = resolveIndex(address(0), address(this), _addrOwner);
+        IIndex(oldIndexOwnerRoot).destruct();
+
+        _addrOwner = addrTo;
+
+        deployIndex(addrTo);
     }
 \end{lstlisting}
 
@@ -240,18 +167,14 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=63]
+\begin{lstlisting}[firstnumber=49]
     function deployIndex(address owner) private {
-        TvmCell codeIndexOwner = _buildIndexCode(address(0), owner);
+        TvmCell codeIndexOwner = _buildIndexCode(_addrRoot, owner);
         TvmCell stateIndexOwner = _buildIndexState(codeIndexOwner, address(this));
-        new Index
-            {stateInit: stateIndexOwner, value: Constants.DEPLOY_INDEX_FEE, flag: 0}
-            (_addrRoot);
+        new Index{stateInit: stateIndexOwner, value: 0.4 ton}(_addrRoot);
 
-        TvmCell codeIndexOwnerRoot = _buildIndexCode(_addrRoot, owner);
+        TvmCell codeIndexOwnerRoot = _buildIndexCode(address(0), owner);
         TvmCell stateIndexOwnerRoot = _buildIndexState(codeIndexOwnerRoot, address(this));
-        new Index
-            {stateInit: stateIndexOwnerRoot, value: Constants.DEPLOY_INDEX_FEE, flag: 0}
-            (_addrRoot);
+        new Index{stateInit: stateIndexOwnerRoot, value: 0.4 ton}(_addrRoot);
     }
 \end{lstlisting}

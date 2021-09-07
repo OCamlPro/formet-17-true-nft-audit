@@ -22,15 +22,15 @@ IIndex & \\\hline
 \ifsoltables
 \noindent\begin{tabular}{|l|l|p{5cm}|}\hline
 address & \_{}addrData &  \\\hline
- & & used in @10.Index.getInfo\\\hline
- & & used in @10.Index.destruct\\\hline
- & & used in @10.Index.destruct\\\hline
- & & used in @10.Index.:constructor\\\hline
+ & & used in @8.Index.getInfo\\\hline
+ & & used in @8.Index.destruct\\\hline
+ & & used in @8.Index.destruct\\\hline
+ & & used in @8.Index.:constructor\\\hline
 \end{tabular}
 \fi
 
 
-\begin{lstlisting}[firstnumber=13]
+\begin{lstlisting}[firstnumber=11]
     address static _addrData;
 \end{lstlisting}
 
@@ -40,24 +40,24 @@ address & \_{}addrData &  \\\hline
 \ifsoltables
 \noindent\begin{tabular}{|l|l|p{5cm}|}\hline
 address & \_{}addrRoot &  \\\hline
- & & used in @10.Index.getInfo\\\hline
- & & assigned in @10.Index.:constructor\\\hline
- & & used in @10.Index.:constructor\\\hline
- & & assigned in @10.Index.:constructor\\\hline
- & & used in @10.Index.:constructor\\\hline
+ & & used in @8.Index.getInfo\\\hline
+ & & assigned in @8.Index.:constructor\\\hline
+ & & used in @8.Index.:constructor\\\hline
+ & & assigned in @8.Index.:constructor\\\hline
+ & & used in @8.Index.:constructor\\\hline
 address & \_{}addrOwner &  \\\hline
- & & used in @10.Index.getInfo\\\hline
- & & assigned in @10.Index.:constructor\\\hline
- & & used in @10.Index.:constructor\\\hline
+ & & used in @8.Index.getInfo\\\hline
+ & & assigned in @8.Index.:constructor\\\hline
+ & & used in @8.Index.:constructor\\\hline
 \end{tabular}
 \fi
 
 
-\begin{lstlisting}[firstnumber=11]
+\begin{lstlisting}[firstnumber=9]
     address _addrRoot;
 \end{lstlisting}
 
-\begin{lstlisting}[firstnumber=12]
+\begin{lstlisting}[firstnumber=10]
     address _addrOwner;
 \end{lstlisting}
 
@@ -74,15 +74,15 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=15]
+\begin{lstlisting}[firstnumber=13]
     constructor(address root) public {
         optional(TvmCell) optSalt = tvm.codeSalt(tvm.code());
-        require(optSalt.hasValue(), Errors.ERROR_EMPTY_SALT);
+        require(optSalt.hasValue(), 101);
         (address addrRoot, address addrOwner) = optSalt
             .get()
             .toSlice()
             .decode(address, address);
-        require(msg.sender == _addrData, Errors.ERROR_MESSAGE_SENDER_IS_NOT_OWNER);
+        require(msg.sender == _addrData);
         tvm.accept();
         _addrRoot = addrRoot;
         _addrOwner = addrOwner;
@@ -101,9 +101,9 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=41]
+\begin{lstlisting}[firstnumber=39]
     function destruct() public override {
-        require(msg.sender == _addrData, Errors.ERROR_MESSAGE_SENDER_IS_NOT_OWNER);
+        require(msg.sender == _addrData);
         selfdestruct(_addrData);
     }
 \end{lstlisting}
@@ -114,7 +114,7 @@ loren ipsum loren ipsum loren ipsum }
 \item TODO
 \end{itemize}
 
-\begin{lstlisting}[firstnumber=31]
+\begin{lstlisting}[firstnumber=29]
     function getInfo() public view override returns (
         address addrRoot,
         address addrOwner,
