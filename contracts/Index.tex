@@ -30,6 +30,8 @@ address & \_{}addrData &  \\\hline
 \fi
 
 
+
+
 \begin{lstlisting}[firstnumber=11]
     address static _addrData;
 \end{lstlisting}
@@ -66,13 +68,15 @@ address & \_{}addrOwner &  \\\hline
 
 \subsection{Constructor}
 
-\issueCritical{Constructor for Index (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+\issueMinor{Constants}{
+    Values "101" and "address(0)" should be constants.
+}
 
-loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
-loren ipsum loren ipsum loren ipsum }
-\begin{itemize}
-\item TODO
-\end{itemize}
+
+
+\issueMinor{Double initialization of }{
+    \_addrRoot is initialized twice if addrRoot $=$ 0.
+}
 
 \begin{lstlisting}[firstnumber=13]
     constructor(address root) public {
@@ -97,10 +101,6 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function destruct}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
-
 \begin{lstlisting}[firstnumber=39]
     function destruct() public override {
         require(msg.sender == _addrData);
@@ -109,10 +109,6 @@ loren ipsum loren ipsum loren ipsum }
 \end{lstlisting}
 
 \subsection{Function getInfo}
-
-\begin{itemize}
-\item TODO
-\end{itemize}
 
 \begin{lstlisting}[firstnumber=29]
     function getInfo() public view override returns (

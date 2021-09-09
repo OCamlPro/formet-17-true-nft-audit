@@ -6,7 +6,12 @@
 \section{Overview}
 
 
-In file {\tt NftRoot.sol}
+\issueMajor{No way to get funds back}{
+    Tokens sent to the contract are locked forever.
+    %
+    They are sent when IndexBasis are destroyed and when
+    contracts are deployed.
+}
 
 \section{Contract Inheritance}
 
@@ -33,7 +38,6 @@ address & \_{}addrBasis &  \\\hline
 \end{tabular}
 \fi
 
-
 \begin{lstlisting}[firstnumber=16]
     uint256 _totalMinted;
 \end{lstlisting}
@@ -42,18 +46,20 @@ address & \_{}addrBasis &  \\\hline
     address _addrBasis;
 \end{lstlisting}
 
+
 \section{Constructor Definitions}
 
 
 \subsection{Constructor}
 
-\issueCritical{Constructor for NftRoot (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+\issueMinor{Variable initialization}{
+    The globals \_totalMinted and \_addrBasis are not initialized.
+}
 
-loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
-loren ipsum loren ipsum loren ipsum }
-\begin{itemize}
-\item TODO
-\end{itemize}
+\issueMinor{Code initialization}{
+    Anyone can build a NftRoot contract with a fake \_codeData and \_codeIndex ; consider checking the 
+    contract hash. 
+}
 
 \begin{lstlisting}[firstnumber=19]
     constructor(TvmCell codeIndex, TvmCell codeData) public {
@@ -68,9 +74,23 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function deployBasis}
 
+\issueMinor{Constants}{
+    Values "0.5 ton", "0.4 ton" and "104" should be defined as constants.
+}
+
+\issueMinor{Variable name typo}{
+     Variable "codeHasData" should be named "codeHashData". 
+}
+
 \begin{itemize}
 \item TODO
 \end{itemize}
+
+\issueMinor{Unclear behavior}{
+    \_addrBasis is updated after a call of deployBasis, hence
+    a call of this function forbids the deletion of the previous 
+    IndexBasis deployed.
+}
 
 \begin{lstlisting}[firstnumber=33]
     function deployBasis(TvmCell codeIndexBasis) public {
@@ -90,9 +110,10 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function destructBasis}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
+\issueCritical{Public visibility}{
+    This function can be called by anyone ; the authentification of destruct
+    in IndexBasis is useless.
+}
 
 \begin{lstlisting}[firstnumber=47]
     function destructBasis() public view {
@@ -102,9 +123,19 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function mintNft}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
+\issueMinor{Constants}{
+    Value "1.1 ton" should be defined a constants.
+}
+
+\issueMinor{Spurious variable name}{
+    \_totalMinted does not represent the total of NFT minted,
+    as the contract creation may bounce.
+}
+
+\issueMajor{Sender may be null}{
+    If a user calls "mintNft", a Data contract is deployed with
+    a null owner.
+}
 
 \begin{lstlisting}[firstnumber=25]
     function mintNft() public {

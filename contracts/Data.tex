@@ -6,7 +6,13 @@
 \section{Overview}
 
 
-In file {\tt Data.sol}
+\issueMajor{No way to get funds back}{
+    Tokens sent to the contract are locked forever.
+    %
+    They are sent when IndexBasis are destroyed and when
+    contracts are deployed.
+}
+
 
 \section{Contract Inheritance}
 
@@ -78,13 +84,13 @@ address & \_{}addrAuthor &  \\\hline
 
 \subsection{Constructor}
 
-\issueCritical{Constructor for Data (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
+\issueMinor{Constants}{
+    Value "101" should be defined as a constant
+}
 
-loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
-loren ipsum loren ipsum loren ipsum }
-\begin{itemize}
-\item TODO
-\end{itemize}
+\issueMajor{addrOwner may be null}{
+    The owner of the contract may be null.
+}
 
 \begin{lstlisting}[firstnumber=20]
     constructor(address addrOwner, TvmCell codeIndex) public {
@@ -108,10 +114,6 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function getInfo}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
-
 \begin{lstlisting}[firstnumber=59]
     function getInfo() public view override returns (
         address addrRoot,
@@ -126,10 +128,6 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function getOwner}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
-
 \begin{lstlisting}[firstnumber=69]
     function getOwner() public view override returns(address addrOwner) {
         addrOwner = _addrOwner;
@@ -138,9 +136,18 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function transferOwnership}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
+\issueCritical{Methods called without value TODO: CHECK}{
+    IIndex(\_).destruct() are called without sending funds.
+}
+
+\issueMajor{New owner may be null}{
+    The new owner of the contract may be null.
+}
+
+\issueMinor{New owner may be equal to the old one}{
+    The new owner of the contract may be equal to the old one, hence
+    destructing and rebuilding identical contracts.
+}
 
 \begin{lstlisting}[firstnumber=35]
     function transferOwnership(address addrTo) public override {
@@ -163,9 +170,9 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function deployIndex}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
+\issueMinor{Constants}{
+    Value "0.4 ton" should be defined as a constant
+}
 
 \begin{lstlisting}[firstnumber=49]
     function deployIndex(address owner) private {

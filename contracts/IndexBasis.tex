@@ -35,6 +35,14 @@ uint256 & \_{}codeHashData &  \\\hline
 
 \subsection{Modifier onlyRoot}
 
+\issueMinor{Modifiers}{
+    Modifiers are often source of bugs ; using them should be avoided (especially when
+    containing calls to tvm.accept()).
+}
+
+\issueMinor{Constants}{
+    Value "100" should be defined as a constant.
+}
 
 \begin{lstlisting}[firstnumber=10]
     modifier onlyRoot() {
@@ -49,14 +57,6 @@ uint256 & \_{}codeHashData &  \\\hline
 
 \subsection{Constructor}
 
-\issueCritical{Constructor for IndexBasis (fake)}{loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
-
-loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum loren ipsum
-loren ipsum loren ipsum loren ipsum }
-\begin{itemize}
-\item TODO
-\end{itemize}
-
 \begin{lstlisting}[firstnumber=16]
     constructor() public onlyRoot {}
 \end{lstlisting}
@@ -66,9 +66,10 @@ loren ipsum loren ipsum loren ipsum }
 
 \subsection{Function destruct}
 
-\begin{itemize}
-\item TODO
-\end{itemize}
+\issueMinor{Superfluous tvm.accept()}{
+    The function tvm.accept() do not need to be called 
+    (unless \_addrRoot $=$ 0, which should not be the case).
+}
 
 \begin{lstlisting}[firstnumber=23]
     function destruct() public onlyRoot {
@@ -77,10 +78,6 @@ loren ipsum loren ipsum loren ipsum }
 \end{lstlisting}
 
 \subsection{Function getInfo}
-
-\begin{itemize}
-\item TODO
-\end{itemize}
 
 \begin{lstlisting}[firstnumber=18]
     function getInfo() public view returns (address addrRoot, uint256 codeHashData) {
