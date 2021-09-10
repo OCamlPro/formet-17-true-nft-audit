@@ -136,8 +136,8 @@ address & \_{}addrAuthor &  \\\hline
 
 \subsection{Function transferOwnership}
 
-\issueCritical{Methods called without value TODO: CHECK}{
-    IIndex(\_).destruct() are called without sending funds.
+\issueCritical{Methods called without value}{
+    IIndex(\_).destruct() are called without specifying funds.
 }
 
 \issueMajor{New owner may be null}{

@@ -7,7 +7,7 @@
 \usepackage{array}
 \usepackage{titletoc}
 \usepackage[table]{xcolor}
-\renewcommand{\listfigurename}{Table of Major and Critical Issues}
+\renewcommand{\listfigurename}{Table of Minor, Major and Critical Issues}
 \input{highlighter}
 
 \newif\ifsolmodules
@@ -15,8 +15,8 @@
 \newif\ifsolissues
 \newif\ifsoldraft
 
-\soldrafttrue
-%\soldraftfalse
+%\soldrafttrue
+\soldraftfalse
 
 %\solmodulestrue
 \solmodulesfalse
@@ -93,8 +93,6 @@ Issues can be entered with:
 \item{\bf \textbackslash{}issueMajor\{title\}\{text\}}
 \item{\bf \textbackslash{}issueMinor\{title\}\{text\}}
 \end{itemize}
-\fi
-
 \section{General Auditing Rules}
 
 \begin{itemize}
@@ -111,6 +109,8 @@ Issues can be entered with:
 \item Before sending a message, the function should check that it has enough gas (to prevent a partial failure during the message sending phase)
 \item {\tt tvm.accept} should only be called after verifying that the sender of the message if the contracts' owner
 \end{itemize}
+\fi
+
 
 \chapter{Introduction}
 \input{introduction.tex}

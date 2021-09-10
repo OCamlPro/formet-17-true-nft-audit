@@ -1,0 +1,47 @@
+\section{Specification}
+
+Non Fungible Tokens are deployed from a \textbf{NftRoot} contract which will
+be the basis of all minted tokens.
+%
+This contract has two purposes.
+\begin{itemize}
+    \item The deployment of a \textbf{Data} contract, representing a fraction of the
+    digitalized asset. So as to easily retrieve the information of the asset, 
+    it deploys two \textbf{Index} contracts: one retrievable from the NftRoot address,
+    the owner's address and the Data address, and one from the NftRoot address
+    and the owner's only. 
+    \item The deployment of an \textbf{IndexBasis} contract with the Data code hash.
+\end{itemize}
+
+These four contracts represent the whole NFT core implementation.
+%
+Many interesting features of this infrastructure comes from the use of salted code
+for generating specific code hashes that can be found with specific instructions accessible 
+by DeBots.
+%
+This audit does not discuss the retrivability of the contracts, but our study of the TrueNFT 
+functioning did not show critical issues in this regard.
+
+\section{Generic issues}
+
+Before reading in detail the source code, several issues (mostly coding habits) affected the
+project as a whole. We list them in this section.
+
+\issueMajor{Funds accessibility and bounced messages}{
+    Unless a contract is destroyed (which is not the case for all contracts), 
+    funds are not accessible.
+    %
+    There is no error handling, especially for bounced messages, which allow
+    funds to be stored on contracts.
+}
+
+\issueMinor{Unsafe assumptions of message origin}{
+    The messages are assumed to be from a contract ; the case msg.sender == address(0)
+    is never treated.
+}
+
+\issueMinor{Naming convention}{
+    Static variables should start with a prefix like "s\_" and
+    globals should start with a prefix like "g\_" or "m\_"
+    and internal/private functions should start with "\_".
+}
