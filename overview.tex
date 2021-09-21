@@ -1,3 +1,31 @@
+
+The implementation of NFT studied in this document is a Proof of Concept
+of how NFT primitives should be built in FreeTON.
+%
+It does not correspond to the actual implementation of an NFT that would
+be deployed.
+%
+However, it appears that the contracts must not be inherited as such as
+the deployment and salting primitives must be specialized, as well as
+the different contratcs holding information (Data for example).
+%
+The different contract of TrueNFT-core should be modified, or at minimum 
+be a source of inspiration.
+%
+Considering this special aspect of the contract, serving as a 
+\emph{specification written in Solidity}, we focused this audit on two 
+aspects.
+%
+First, we checked for issues in the NFT-Core logic, i.e. how the different
+contract and data interactions were implemented with respect to what an NFT
+should be.
+%
+Second, as an usual audit, we searched for actual issues in the code.
+%
+While this second kind of issues may not be relevant (as the project is a 
+POC that should be modified), we assumed that if this repository is expected
+to be a reference, it should be perfect in every regard. 
+
 \section{Specification}
 
 Non Fungible Tokens are deployed from a \textbf{NftRoot} contract which will
@@ -36,7 +64,7 @@ project as a whole. We list them in this section.
 }
 
 \issueMinor{Unsafe assumptions of message origin}{
-    The messages are assumed to be from a contract ; the case msg.sender == address(0)
+    The messages are assumed to be from a contract; the case msg.sender == address(0)
     is never treated.
 }
 
