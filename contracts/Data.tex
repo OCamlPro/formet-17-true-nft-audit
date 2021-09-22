@@ -9,8 +9,11 @@
 \issueMajor{No way to get funds back}{
     Tokens sent to the contract are locked forever.
     %
-    They are sent when IndexBasis are destroyed and when
-    contracts are deployed.
+    Such tokens are received when IndexBasis are destroyed, or when
+    these contracts are deployed.
+    %
+    Such tokens could be used to fund the long-term storage of the
+    contract, but, if it is the purpose, it should be specified.
 }
 
 
@@ -85,12 +88,13 @@ address & \_{}addrAuthor &  \\\hline
 \subsection{Constructor}
 
 \issueMinor{Constants}{
-    Value "101" should be defined as a constant
+    Value "101" should be defined as a constant (would improve readability)
 }
 
-\issueMajor{addrOwner may be null}{
-    The owner of the contract may be null.
-}
+\issueMajor{addrOwner may be null}{The constructor allows {\tt
+    addrOwner} to be null, making the contract useless and
+  untransferable. A {\tt require} should check non-null {\tt
+    addrOwner} before {\tt tvm.accept}.  }
 
 \begin{lstlisting}[firstnumber=20]
     constructor(address addrOwner, TvmCell codeIndex) public {
@@ -136,18 +140,23 @@ address & \_{}addrAuthor &  \\\hline
 
 \subsection{Function transferOwnership}
 
-\issueCritical{Methods called without value}{
-    IIndex(\_).destruct() are called without specifying funds.
-}
+\issueMajor{New owner may be null}{ The contract does not check that
+  the new owner is not null. As a consequence, a user may lose
+  complete ownership of the contract by mistake, with no new owner for
+  the contract. A {\tt require} should check that {\tt addrTo.value}
+  is not zero.  }
 
-\issueMajor{New owner may be null}{
-    The new owner of the contract may be null.
-}
+\issueMinor{Sending {\tt destruct} should specify sent value} { It is
+  a good practice to specify the value sent within messages,
+  especially here where the {\tt destruct} function may have a higher
+  cost than expected in derived implementations. Fix: add a value
+  field associated to a constant that can be easily modified by
+  derived implementations.  }
 
-\issueMinor{New owner may be equal to the old one}{
-    The new owner of the contract may be equal to the old one, hence
-    destructing and rebuilding identical contracts.
-}
+\issueMinor{New owner may be equal to the old one}{ The new owner of
+  the contract may be equal to the old one, hence destructing and
+  rebuilding identical contracts. A {\tt require} should check that
+  {\tt addrTo} is not equal to {\tt \_addrOwner}.  }
 
 \begin{lstlisting}[firstnumber=35]
     function transferOwnership(address addrTo) public override {
@@ -170,9 +179,8 @@ address & \_{}addrAuthor &  \\\hline
 
 \subsection{Function deployIndex}
 
-\issueMinor{Constants}{
-    Value "0.4 ton" should be defined as a constant
-}
+\issueMinor{Constants}{ Value "0.4 ton" should be defined as a
+  constant (would improve readability). }
 
 \begin{lstlisting}[firstnumber=49]
     function deployIndex(address owner) private {

@@ -10,7 +10,9 @@
     Tokens sent to the contract are locked forever.
     %
     They are sent when IndexBasis are destroyed and when
-    contracts are deployed.
+    contracts are deployed. The contract should provide a function
+    to recover accumulated funds, or specify that these funds are used
+    for long-term storage.
 }
 
 \section{Contract Inheritance}
@@ -56,10 +58,13 @@ address & \_{}addrBasis &  \\\hline
     The globals \_totalMinted and \_addrBasis are not initialized.
 }
 
-\issueMinor{Code initialization}{
-    Anyone can build a NftRoot contract with a fake \_codeData and \_codeIndex ; consider checking the 
-    contract hash. 
-}
+\issueMinor{Code initialization}{ Anyone can build a NftRoot contract
+  with a fake {\tt \_codeData} and {\tt \_codeIndex} ; consider checking the
+  contract hashes.  }
+
+\issueMinor{Code initialization}{ It is usually a bad practice to
+  initialize variables containing code cells in constructors, as
+  deployment messages are limited to 16kB.  }
 
 \begin{lstlisting}[firstnumber=19]
     constructor(TvmCell codeIndex, TvmCell codeData) public {
@@ -74,22 +79,21 @@ address & \_{}addrBasis &  \\\hline
 
 \subsection{Function deployBasis}
 
-\issueMinor{Constants}{
-    Values "0.5 ton", "0.4 ton" and "104" should be defined as constants.
-}
+\issueCritical{Multiple calls may lead to leakage of {\tt IndexBasis}
+  contracts}{ {\tt \_addrBasis} is updated after every call to {\tt
+    deployBasis}, hence a call to this function forbids the deletion
+  of the previously deployed {\tt IndexBasis}. If only one {\tt
+    IndexBasis} contract should be created, the function should {\tt
+    require} that {\tt \_addrBasis} is null before deploying a new
+  contract. Otherwise, {\tt destructBasis} should receive {\tt
+    codeIndexBasis} as argument too, to be able to recompute the
+  corresponding contract address to destruct.}
+
+\issueMinor{Constants}{ Values "0.5 ton", "0.4 ton" and "104" should
+  be defined as constants (would improve readability) }
 
 \issueMinor{Variable name typo}{
-     Variable "codeHasData" should be named "codeHashData". 
-}
-
-\begin{itemize}
-\item TODO
-\end{itemize}
-
-\issueMinor{Unclear behavior}{
-    \_addrBasis is updated after a call of deployBasis, hence
-    a call of this function forbids the deletion of the previous 
-    IndexBasis deployed.
+     Variable {\tt codeHasData} should be named {\tt codeHashData}. 
 }
 
 \begin{lstlisting}[firstnumber=33]
@@ -110,10 +114,18 @@ address & \_{}addrBasis &  \\\hline
 
 \subsection{Function destructBasis}
 
-\issueCritical{Public visibility}{
-    This function can be called by anyone ; the authentification of destruct
-    in IndexBasis is useless.
-}
+\issueCritical{Function should not be public}{ This function can be
+  called by anyone (no check on sender), so that anybody can destroy
+  {\tt IndexBasis} contracts; the authentification of destruct in
+  IndexBasis is useless. }
+
+\issueMinor{Check {\tt \_addrBasis} is not zero}{ Before destroying
+  the contract pointed to by {\tt \_addrBasis}, the contract should
+  check that the variable is not zero, or fail.}
+
+\issueMinor{Set {\tt \_addrBasis} to zero}{After destroying a
+  contract, the function should set the {\tt \_addrBasis} variable to
+  zero.}
 
 \begin{lstlisting}[firstnumber=47]
     function destructBasis() public view {
@@ -124,18 +136,24 @@ address & \_{}addrBasis &  \\\hline
 \subsection{Function mintNft}
 
 \issueMinor{Constants}{
-    Value "1.1 ton" should be defined a constants.
+    Value "1.1 ton" should be defined as a constant.
 }
 
-\issueMinor{Spurious variable name}{
-    \_totalMinted does not represent the total of NFT minted,
-    as the contract creation may bounce.
-}
+\issueMinor{No check of {\tt msg.value}}{ The contract should check
+  that enough balance is carried within {\tt msg.value} to deploy the
+  contract. Otherwise, the {\tt \_totalMinted} value may be increased,
+  but the contract will still fail to deploy the corresponding
+  contract. }
 
-\issueMajor{Sender may be null}{
-    If a user calls "mintNft", a Data contract is deployed with
-    a null owner.
-}
+%\issueMinor{Spurious variable name}{
+%    \_totalMinted does not represent the total of NFT minted,
+%    as the contract creation may bounce.
+%}
+
+%\issueMajor{Sender may be null}{
+%    If a user calls "mintNft", a Data contract is deployed with
+%    a null owner.
+%}
 
 \begin{lstlisting}[firstnumber=25]
     function mintNft() public {

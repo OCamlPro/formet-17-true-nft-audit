@@ -35,13 +35,13 @@ uint256 & \_{}codeHashData &  \\\hline
 
 \subsection{Modifier onlyRoot}
 
-\issueMinor{Modifiers}{
-    Modifiers are often source of bugs ; using them should be avoided (especially when
-    containing calls to tvm.accept()).
-}
+\issueMinor{Modifiers}{ Modifiers are often source of bugs ; using
+  them should be avoided, especially when containing calls to {\tt
+    tvm.accept()} that would happen before later {\tt require} that
+  would be added in derived implementations.  }
 
 \issueMinor{Constants}{
-    Value "100" should be defined as a constant.
+    Value "100" should be defined as a constant (would improve readability)
 }
 
 \begin{lstlisting}[firstnumber=10]
@@ -66,10 +66,10 @@ uint256 & \_{}codeHashData &  \\\hline
 
 \subsection{Function destruct}
 
-\issueMinor{Superfluous tvm.accept()}{
-    The function tvm.accept() do not need to be called 
-    (unless \_addrRoot $=$ 0, which should not be the case).
-}
+%\issueMinor{Superfluous tvm.accept()}{
+%    The function tvm.accept() do not need to be called 
+%    (unless \_addrRoot $=$ 0, which should not be the case).
+%}
 
 \begin{lstlisting}[firstnumber=23]
     function destruct() public onlyRoot {

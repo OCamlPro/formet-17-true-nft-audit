@@ -1,26 +1,23 @@
 
 The implementation of NFT studied in this document is a Proof of Concept
-of how NFT primitives should be built in FreeTON.
+of how NFT primitives should be built on FreeTON.
 %
 It does not correspond to the actual implementation of an NFT that would
-be deployed.
+be directly deployed.
 %
-However, it appears that the contracts must not be inherited as such as
-the deployment and salting primitives must be specialized, as well as
-the different contratcs holding information (Data for example).
+Instead, these contracts act as templates of how NFT contracts should be implemented to provide the same interface as other NFTs on FreeTON.
 %
-The different contract of TrueNFT-core should be modified, or at minimum 
-be a source of inspiration.
+As such, the different contracts of TrueNFT-core should be modified, or at minimum considered as just a source of inspiration.
 %
-Considering this special aspect of the contract, serving as a 
+Considering this special aspect of these contracts, serving as a 
 \emph{specification written in Solidity}, we focused this audit on two 
 aspects.
 %
-First, we checked for issues in the NFT-Core logic, i.e. how the different
-contract and data interactions were implemented with respect to what an NFT
+First, we looked for issues in the NFT-Core logic, i.e. how the different
+contracts and data interactions were implemented with respect to what an NFT
 should be.
 %
-Second, as an usual audit, we searched for actual issues in the code.
+Second, as a usual audit, we searched for actual issues in the code.
 %
 While this second kind of issues may not be relevant (as the project is a 
 POC that should be modified), we assumed that if this repository is expected
@@ -33,22 +30,32 @@ be the basis of all minted tokens.
 %
 This contract has two purposes.
 \begin{itemize}
-    \item The deployment of a \textbf{Data} contract, representing a fraction of the
-    digitalized asset. So as to easily retrieve the information of the asset, 
-    it deploys two \textbf{Index} contracts: one retrievable from the NftRoot address,
-    the owner's address and the Data address, and one from the NftRoot address
-    and the owner's only. 
-    \item The deployment of an \textbf{IndexBasis} contract with the Data code hash.
+    \item The deployment of a \textbf{Data} contract, representing a
+    fraction of the digitalized asset (i.e. the NFT itself). So as to
+    easily retrieve the information of the asset from outside the
+    blockchain, the \textbf{Data} contract deploys two \textbf{Index}
+    contracts, each pointing to the \textbf{Data} address: one
+    retrievable from the NftRoot address and the owner's address
+    (allowing users to list all NFTs derived from this root and owned
+    by the same owner), and one from only the owner's address
+    (allowing users to list all NFTs owner by the same owner).
+
+\item The deployment of an \textbf{IndexBasis} contract with the Data code hash.
 \end{itemize}
 
 These four contracts represent the whole NFT core implementation.
 %
-Many interesting features of this infrastructure comes from the use of salted code
-for generating specific code hashes that can be found with specific instructions accessible 
-by DeBots.
-%
-This audit does not discuss the retrivability of the contracts, but our study of the TrueNFT 
-functioning did not show critical issues in this regard.
+The DeBot SDK provides a primitive to list all contracts with a given
+code-hash. To use this primitive to list NFTs, the contracts make use
+of {\em salted} codes: for example, \textbf{Index} contracts are
+deployed with the same code, but salted with the owner's address, and
+either the \textbf{NftRoot} address or zero, so as to create different
+code-hashes (with actually the same code!). As a consequence, the
+DeBot primitive can be used to list all NFTs for a given owner
+address, within or not a specific NFT root.
+
+From our audit, we think that this mechanism is safe, and works as
+expected.
 
 \section{Generic issues}
 
@@ -56,20 +63,18 @@ Before reading in detail the source code, several issues (mostly coding habits) 
 project as a whole. We list them in this section.
 
 \issueMajor{Funds accessibility and bounced messages}{
-    Unless a contract is destroyed (which is not the case for all contracts), 
-    funds are not accessible.
-    %
-    There is no error handling, especially for bounced messages, which allow
-    funds to be stored on contracts.
-}
+    Unless a contract is destroyed (which is not the case for all
+    contracts), funds are not accessible.  As there is no error
+    handling, especially for bounced messages, funds may accumulate on
+    the contracts. However, there are no provided functions to recover
+    such funds to the user.  }
 
-\issueMinor{Unsafe assumptions of message origin}{
-    The messages are assumed to be from a contract; the case msg.sender == address(0)
-    is never treated.
-}
+%\issueMinor{Unsafe assumptions of message origin}{
+%    The messages are assumed to be from a contract; the case
+%    msg.sender == address(0) is never treated.  }
 
 \issueMinor{Naming convention}{
-    Static variables should start with a prefix like "s\_" and
-    globals should start with a prefix like "g\_" or "m\_"
-    and internal/private functions should start with "\_".
-}
+    Static variables should start with a prefix like "s\_" and globals
+    should start with a prefix like "g\_" or "m\_" and
+    internal/private functions should start with "\_". Following such
+    rules would make these contracts much easier to read and audit.  }

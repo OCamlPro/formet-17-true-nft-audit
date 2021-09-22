@@ -69,13 +69,11 @@ address & \_{}addrOwner &  \\\hline
 \subsection{Constructor}
 
 \issueMinor{Constants}{
-    Values "101" and "address(0)" should be constants.
+    Value "101" should be defined as a constant (would improve readability)
 }
 
-
-
-\issueMinor{Double initialization of }{
-    \_addrRoot is initialized twice if addrRoot $=$ 0.
+\issueMinor{Double initialization of {\tt \_addrRoot} }{
+    {\tt \_addrRoot} is initialized twice if {\tt addrRoot} $=$ 0.
 }
 
 \begin{lstlisting}[firstnumber=13]
